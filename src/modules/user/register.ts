@@ -1,5 +1,12 @@
-import { Resolver, Query, Mutation, Arg, FieldResolver, Root } from "type-graphql";
-import * as bcrypt from "bcrypt";
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Arg,
+  FieldResolver,
+  Root,
+} from "type-graphql";
+import bcrypt from "bcrypt";
 
 import { User } from "../../entity/User";
 
