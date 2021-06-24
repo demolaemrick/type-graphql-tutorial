@@ -21,9 +21,7 @@ const main = async () => {
   const schema = await buildSchema({
     resolvers: [RegisterResolver, LoginResolver, MeResolver],
     authChecker: ({ context: {req} }) => {
-      if(!req.session.userId) return false;
-
-      return true; // or false if access is denied
+      return !!req.session.userId
     },
   });
 
