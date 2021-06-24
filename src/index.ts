@@ -5,13 +5,13 @@ import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import session from "express-session";
 import connectRedis from "connect-redis";
-import cors from "cors"
+import cors from "cors";
 
 import { redis } from "./redis";
 
 import { RegisterResolver } from "./modules/user/Register";
-import { LoginResolver } from "./modules/user/Login"
-import { MeResolver } from "./modules/user/Me"
+import { LoginResolver } from "./modules/user/Login";
+import { MeResolver } from "./modules/user/Me";
 
 const PORT = process.env.PORT || 8080;
 
@@ -20,20 +20,27 @@ const main = async () => {
 
   const schema = await buildSchema({
     resolvers: [RegisterResolver, LoginResolver, MeResolver],
+    authChecker: ({ context: {req} }) => {
+      if(!req.session.userId) return false;
+
+      return true; // or false if access is denied
+    },
   });
 
   const server = new ApolloServer({
     schema,
-    context: ({req}: any) => ({req})
+    context: ({ req }: any) => ({ req }),
   });
 
   const app = express();
 
-  app.use(cors({
-    credentials: true,
-    origin: 'https://localhost:3000'
-  }))
-  const RedisStore = connectRedis(session); 
+  app.use(
+    cors({
+      credentials: true,
+      origin: "https://localhost:3000",
+    })
+  );
+  const RedisStore = connectRedis(session);
 
   const sessionOption: session.SessionOptions = {
     store: new RedisStore({
