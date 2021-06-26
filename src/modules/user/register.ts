@@ -3,9 +3,10 @@ import bcrypt from "bcrypt";
 
 import { User } from "../../entity/User";
 import { RegisterInput } from "./register/registerInput";
-import { IsAuth } from "../middlewares/isAuth";
+import { IsAuth } from "../middleware/isAuth";
 import { sendEmail } from "../utils/sendEmail"
 import { createConfirmationUrl } from "../utils/createConfirmationUrl";
+import { confirmUserPrefix }  from "../constants/redisPrefixes"
 
 @Resolver(User)
 export class RegisterResolver {
@@ -29,7 +30,7 @@ export class RegisterResolver {
 
     await user.save();
 
-    await sendEmail(email, await createConfirmationUrl(user.id))
+    await sendEmail(email, await createConfirmationUrl(user.id, confirmUserPrefix))
     return user;
   }
 }
