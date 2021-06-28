@@ -40,6 +40,7 @@
   },
   "scripts": {
     "start": "tsnd --respawn src/index.ts",
-    "typeorm": "ts-node ./node_modules/typeorm/cli.js"
+    "db:setup": "ts-node src/test-utils/setup",
+    "test": "npm run db:setup && jest"
   }
 }
